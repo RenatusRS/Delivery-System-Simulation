@@ -5,45 +5,45 @@ import rs.etf.sab.operations.ShopOperations;
 
 
 class ShopOperationsImpl implements ShopOperations {
-
+    
+    
     @Override
-    public int createShop(String string, String string1) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int setCity(int i, String string) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int getCity(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int setDiscount(int i, int i1) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int increaseArticleCount(int i, int i1) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int getArticleCount(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Integer> getArticles(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int getDiscount(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public int createShop(String s, String s1) {
+        return 0;
     }
     
+    @Override
+    public int setCity(int i, String s) {
+        return 0;
+    }
+    
+    @Override
+    public int getCity(int i) {
+        return 0;
+    }
+    
+    @Override
+    public int setDiscount(int i, int i1) {
+        return 0;
+    }
+    
+    @Override
+    public int increaseArticleCount(int i, int i1) {
+        return 0;
+    }
+    
+    @Override
+    public int getArticleCount(int i) {
+        return 0;
+    }
+    
+    @Override
+    public List<Integer> getArticles(int i) {
+        return null;
+    }
+    
+    @Override
+    public int getDiscount(int i) {
+        return 0;
+    }
 }

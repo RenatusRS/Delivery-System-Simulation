@@ -6,40 +6,39 @@ import rs.etf.sab.operations.BuyerOperations;
 
 
 class BuyerOperationsImpl implements BuyerOperations {
-
+    
     @Override
-    public int createBuyer(String string, int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int setCity(int i, int i1) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int getCity(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public BigDecimal increaseCredit(int i, BigDecimal bd) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int createOrder(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Integer> getOrders(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public BigDecimal getCredit(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public int createBuyer(String s, int i) {
+        return 0;
     }
     
+    @Override
+    public int setCity(int i, int i1) {
+        return 0;
+    }
+    
+    @Override
+    public int getCity(int i) {
+        return 0;
+    }
+    
+    @Override
+    public BigDecimal increaseCredit(int i, BigDecimal bigDecimal) {
+        return null;
+    }
+    
+    @Override
+    public int createOrder(int i) {
+        return 0;
+    }
+    
+    @Override
+    public List<Integer> getOrders(int i) {
+        return null;
+    }
+    
+    @Override
+    public BigDecimal getCredit(int i) {
+        return null;
+    }
 }

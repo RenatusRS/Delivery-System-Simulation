@@ -5,30 +5,30 @@ import rs.etf.sab.operations.CityOperations;
 
 
 class CityOperationsImpl implements CityOperations {
-
+    
+    
     @Override
-    public int createCity(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Integer> getCities() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int connectCities(int i, int i1, int i2) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Integer> getConnectedCities(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Integer> getShops(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public int createCity(String s) {
+        return 0;
     }
     
+    @Override
+    public List<Integer> getCities() {
+        return null;
+    }
+    
+    @Override
+    public int connectCities(int i, int i1, int i2) {
+        return 0;
+    }
+    
+    @Override
+    public List<Integer> getConnectedCities(int i) {
+        return null;
+    }
+    
+    @Override
+    public List<Integer> getShops(int i) {
+        return null;
+    }
 }
