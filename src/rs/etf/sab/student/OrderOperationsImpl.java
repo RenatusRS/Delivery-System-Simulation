@@ -1,12 +1,11 @@
 package rs.etf.sab.student;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import rs.etf.sab.operations.OrderOperations;
-import rs.etf.sab.student.utils.SelectResult;
+import rs.etf.sab.student.utils.Column;
+import rs.etf.sab.student.utils.Result;
 import rs.etf.sab.student.utils.DB;
 import rs.etf.sab.student.utils.Where;
 
@@ -15,19 +14,19 @@ class OrderOperationsImpl implements OrderOperations {
     
     @Override
     public int addArticle(int orderId, int articleId, int count) {
-        SelectResult orderArticle = DB.select("OrderArticle", new Where[] {
+        Result orderArticle = DB.select("OrderArticle", new Where[] {
             new Where("OrderID", "=", orderId),
             new Where("ArticleID", "=", articleId)
         });
         
         if (orderArticle.isEmpty()) {
-            return DB.insert("OrderArticle", new HashMap<>() {{
+            return DB.insert("OrderArticle", new Column() {{
                 put("OrderID", orderId);
                 put("ArticleID", articleId);
                 put("Count", count);
             }});
         } else {
-            DB.update("OrderArticle", new HashMap<>() {{
+            DB.update("OrderArticle", new Column() {{
                 put("Count", (int) orderArticle.get(0).get("Count") + count);
             }}, new Where[] {
                 new Where("OrderID", "=", orderId),
@@ -48,15 +47,9 @@ class OrderOperationsImpl implements OrderOperations {
     
     @Override
     public List<Integer> getItems(int orderId) {
-        SelectResult orderArticles = DB.select("OrderArticle", new Where("OrderID", "=", orderId));
-    
-        ArrayList<Integer> articleIds = new ArrayList<>();
+        Result orderArticles = DB.select("OrderArticle", new Where("OrderID", "=", orderId));
         
-        for (HashMap<String, Object> orderArticle : orderArticles) {
-            articleIds.add((int) orderArticle.get("ID"));
-        }
-        
-        return articleIds;
+        return (List<Integer>) orderArticles.getAll("ID");
     }
     
     @Override
@@ -91,7 +84,7 @@ class OrderOperationsImpl implements OrderOperations {
     
     @Override
     public int getBuyer(int orderId) {
-        SelectResult order = DB.select("Order", new Where("OrderID", "=", orderId));
+        Result order = DB.select("Order", new Where("OrderID", "=", orderId));
         
         return order.isEmpty() ? -1 : (int) order.get(0).get("BuyerID");
     }

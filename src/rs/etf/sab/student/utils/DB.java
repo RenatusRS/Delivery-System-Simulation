@@ -1,8 +1,6 @@
 package rs.etf.sab.student.utils;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class DB {
 	private static Connection connection = null;
@@ -11,33 +9,33 @@ public class DB {
 		connection = DriverManager.getConnection(
 				"jdbc:sqlserver://" + server + ":" + port +
 						";databaseName=" + database,
-				"king",
-				"123123"
+				"sa",
+				"123"
 		);
 	}
 	
-	public static SelectResult select(String table) {
+	public static Result select(String table) {
 		return select(table, (Where[][]) null);
 	}
 	
-	public static SelectResult select(String table, Where wheres) {
+	public static Result select(String table, Where wheres) {
 		return select(table, wheres == null ? null : new Where[][]{{wheres}});
 	}
 	
-	public static SelectResult select(String table, Where[] wheres) {
+	public static Result select(String table, Where[] wheres) {
 		return select(table, wheres == null ? null : new Where[][]{wheres});
 	}
 	
-	public static SelectResult select(String table, Where[][] wheres) {
+	public static Result select(String table, Where[][] wheres) {
 		try {
 			return get("SELECT * FROM [" + table + "]" + (wheres == null || wheres.length == 0 ? "" : " WHERE " + Where.toString(wheres)));
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return new SelectResult();
+			return new Result();
 		}
 	}
 	
-	public static int insert(String table, HashMap<String, Object> values) {
+	public static int insert(String table, Column values) {
 		String query = "INSERT INTO [" + table + "]";
 		
 		query += " (" + String.join(",", values.keySet()) + ")";
@@ -58,15 +56,15 @@ public class DB {
 		}
 	}
 	
-	public static int update(String table, HashMap<String, Object> values, Where wheres) {
+	public static int update(String table, Column values, Where wheres) {
 		return update(table, values, new Where[]{wheres});
 	}
 	
-	public static int update(String table, HashMap<String, Object> values, Where[] wheres) {
+	public static int update(String table, Column values, Where[] wheres) {
 		return update(table, values, new Where[][]{wheres});
 	}
 	
-	public static int update(String table, HashMap<String, Object> values, Where[][] wheres) {
+	public static int update(String table, Column values, Where[][] wheres) {
 		StringBuilder query = new StringBuilder("UPDATE [" + table + "] SET ");
 		
 		for (String key : values.keySet()) {
@@ -119,16 +117,16 @@ public class DB {
 		}
 	}
 	
-	private static SelectResult get(String query) throws SQLException {
+	private static Result get(String query) throws SQLException {
 		System.out.println(query);
 		
 		try (Statement statement = connection.createStatement()) {
 			ResultSet resultSet = statement.executeQuery(query);
 			
-			SelectResult result = new SelectResult();
+			Result result = new Result();
 			
 			while (resultSet.next()) {
-				HashMap<String, Object> row = new HashMap<>();
+				Column row = new Column();
 				
 				ResultSetMetaData metaData = resultSet.getMetaData();
 				
