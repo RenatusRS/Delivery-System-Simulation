@@ -1,15 +1,14 @@
 package rs.etf.sab.student;
 
 import rs.etf.sab.operations.*;
-import org.junit.Test;
 import rs.etf.sab.student.utils.DB;
 import rs.etf.sab.tests.TestHandler;
 import rs.etf.sab.tests.TestRunner;
 
 import java.sql.SQLException;
-import java.util.Calendar;
 
 public class StudentMain {
+    public static final GeneralOperations generalOperations = new lu190691_GeneralOperations();
 
     public static void main(String[] args) {
         
@@ -21,13 +20,12 @@ public class StudentMain {
             return;
         }
         
-        ArticleOperations articleOperations = new ArticleOperationsImpl(); // Change this for your implementation (points will be negative if interfaces are not implemented).
-        BuyerOperations buyerOperations = new BuyerOperationsImpl();
-        CityOperations cityOperations = new CityOperationsImpl();
-        GeneralOperations generalOperations = new GeneralOperationsImpl();
-        OrderOperations orderOperations = new OrderOperationsImpl();
-        ShopOperations shopOperations = new ShopOperationsImpl();
-        TransactionOperations transactionOperations = new TransactionOperationsImpl();
+        ArticleOperations articleOperations = new lu190691_ArticleOperations(); // Change this for your implementation (points will be negative if interfaces are not implemented).
+        BuyerOperations buyerOperations = new lu190691_BuyerOperations();
+        CityOperations cityOperations = new lu190691_CityOperations();
+        OrderOperations orderOperations = new lu190691_OrderOperations();
+        ShopOperations shopOperations = new lu190691_ShopOperations();
+        TransactionOperations transactionOperations = new lu190691_TransactionOperations();
         
         TestHandler.createInstance(
                 articleOperations,

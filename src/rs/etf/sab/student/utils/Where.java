@@ -8,6 +8,7 @@ public class Where {
 	public Where(String column, String operator, int value) {
 		this(column, operator, Integer.toString(value));
 	}
+	
 	public Where(String column, String operator, String value) {
 		if (column == null || column.isEmpty()) {
 			throw new IllegalArgumentException("Column name cannot be null or empty.");
@@ -17,21 +18,30 @@ public class Where {
 			throw new IllegalArgumentException("Operator cannot be null or empty.");
 		}
 		
-		if (value == null || value.isEmpty()) {
-			throw new IllegalArgumentException("Value cannot be null or empty.");
+		if (value != null && value.isEmpty()) {
+			throw new IllegalArgumentException("Value cannot be empty.");
 		}
 		
-		if (!operator.equals("=") && !operator.equals("<>") && !operator.equals(">") && !operator.equals("<") && !operator.equals(">=") && !operator.equals("<=")) {
-			throw new IllegalArgumentException("Operator must be one of the following: =, <>, >, <, >=, <=.");
+		if (value == null && !operator.equals("IS") && !operator.equals("IS NOT")) {
+			throw new IllegalArgumentException("Wrong operator for null value.");
+		}
+		
+		if (
+				!operator.equals("=") &&
+						!operator.equals("<>") &&
+						!operator.equals(">") &&
+						!operator.equals("<") &&
+						!operator.equals(">=") &&
+						!operator.equals("<=") &&
+						!operator.equals("IS") &&
+						!operator.equals("IS NOT")
+		) {
+			throw new IllegalArgumentException("Operator must be one of the following: =, <>, >, <, >=, <=, IS, IS NOT.");
 		}
 		
 		this.column = column;
 		this.operator = operator;
 		this.value = value;
-	}
-	
-	public String toString() {
-		return column + " " + operator + " '" + value + "'";
 	}
 	
 	public static String toString(Where[] wheres) {
@@ -68,5 +78,12 @@ public class Where {
 		}
 		
 		return sb.toString();
+	}
+	
+	public String toString() {
+		String string = column + " " + operator + " ";
+		string += value == null ? "NULL" : "'" + value + "'";
+		
+		return string;
 	}
 }

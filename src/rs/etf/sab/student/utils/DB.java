@@ -35,7 +35,7 @@ public class DB {
 		}
 	}
 	
-	public static int insert(String table, Column values) {
+	public static int insert(String table, Entry values) {
 		String query = "INSERT INTO [" + table + "]";
 		
 		query += " (" + String.join(",", values.keySet()) + ")";
@@ -56,15 +56,15 @@ public class DB {
 		}
 	}
 	
-	public static int update(String table, Column values, Where wheres) {
+	public static int update(String table, Entry values, Where wheres) {
 		return update(table, values, new Where[]{wheres});
 	}
 	
-	public static int update(String table, Column values, Where[] wheres) {
+	public static int update(String table, Entry values, Where[] wheres) {
 		return update(table, values, new Where[][]{wheres});
 	}
 	
-	public static int update(String table, Column values, Where[][] wheres) {
+	public static int update(String table, Entry values, Where[][] wheres) {
 		StringBuilder query = new StringBuilder("UPDATE [" + table + "] SET ");
 		
 		for (String key : values.keySet()) {
@@ -126,7 +126,7 @@ public class DB {
 			Result result = new Result();
 			
 			while (resultSet.next()) {
-				Column row = new Column();
+				Entry row = new Entry();
 				
 				ResultSetMetaData metaData = resultSet.getMetaData();
 				
@@ -136,6 +136,8 @@ public class DB {
 				
 				result.add(row);
 			}
+			
+			System.out.println(result);
 			
 			return result;
 		}
