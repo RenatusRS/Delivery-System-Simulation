@@ -13,17 +13,25 @@ public class GeneralOperationsImpl implements GeneralOperations {
     
     @Override
     public void setInitialTime(Calendar time) {
-        this.time = time;
+        Calendar timeCopy = Calendar.getInstance();
+        timeCopy.setTimeInMillis(time.getTimeInMillis());
+        this.time = timeCopy;
     }
     
     @Override
     public Calendar time(int days) {
         time.setTimeInMillis(time.getTimeInMillis() + (long) days * 24 * 60 * 60 * 1000);
         
+        DB.select("City");
+        
         Result orders = DB.select("Order", new Where("Status", "=", "sent"));
         
         for (Entry order : orders) {
             int orderID = (int) order.get("OrderID");
+            
+            if (order.get("Status") == "arrived") {
+                continue;
+            }
     
             int maxUsedTokens = 0;
             
@@ -33,6 +41,12 @@ public class GeneralOperationsImpl implements GeneralOperations {
                 int shopCityId = (int) orderArticle.get("ShopCityID");
                 int targetCityId = (int) orderArticle.get("TargetCityID");
                 int distance = (int) orderArticle.get("Distance");
+                
+                if (shopCityId == targetCityId && distance == 0) {
+                    continue;
+                }
+                
+                System.out.println("OrderArticleID: " + orderArticle.get("OrderArticleID") + ", ShopCityID: " + shopCityId + ", TargetCityID: " + targetCityId + ", Distance: " + distance);
                 
                 int usedTokens = 0;
                 
@@ -51,9 +65,15 @@ public class GeneralOperationsImpl implements GeneralOperations {
                         
                         ArrayList<Integer> path = UtilityOperations.shortestPath(targetCityId, shopCityId);
                         
-                        Result connection = DB.select("Connection", new Where[] {
-                            new Where("CityID1", "=", path.get(0)),
-                            new Where("CityID2", "=", path.get(1))
+                        Result connection = DB.select("Connection", new Where[][] {
+                                new Where[] {
+                                        new Where("CityID1", "=", path.get(0)),
+                                        new Where("CityID2", "=", path.get(1))
+                                },
+                                new Where[] {
+                                        new Where("CityID1", "=", path.get(1)),
+                                        new Where("CityID2", "=", path.get(0))
+                                }
                         });
                         
                         distance = (int) connection.get("Distance");
@@ -69,6 +89,10 @@ public class GeneralOperationsImpl implements GeneralOperations {
                     put("Distance", finalDistance);
                     put("TargetCityID", finalTargetCityId);
                 }}, new Where("OrderArticleID", "=", (int) orderArticle.get("OrderArticleID")));
+            }
+            
+            if (maxUsedTokens == days) {
+                continue;
             }
             
             int distance = (int) order.get("Distance");
@@ -88,15 +112,22 @@ public class GeneralOperationsImpl implements GeneralOperations {
                 maxUsedTokens += toUse;
                 
                 if (distance == 0) {
-                    if (currentCityId == buyerCityId) {
+                    if (targetCityId == buyerCityId) {
+                        currentCityId = buyerCityId;
                         break;
                     }
                     
-                    ArrayList<Integer> path = UtilityOperations.shortestPath(currentCityId, buyerCityId);
-                    
-                    Result connection = DB.select("Connection", new Where[] {
-                        new Where("CityID1", "=", path.get(0)),
-                        new Where("CityID2", "=", path.get(1))
+                    ArrayList<Integer> path = UtilityOperations.shortestPath(targetCityId, buyerCityId);
+    
+                    Result connection = DB.select("Connection", new Where[][] {
+                            new Where[] {
+                                    new Where("CityID1", "=", path.get(0)),
+                                    new Where("CityID2", "=", path.get(1))
+                            },
+                            new Where[] {
+                                    new Where("CityID1", "=", path.get(1)),
+                                    new Where("CityID2", "=", path.get(0))
+                            }
                     });
                     
                     distance = (int) connection.get("Distance");
@@ -108,11 +139,14 @@ public class GeneralOperationsImpl implements GeneralOperations {
             int finalDistance = distance;
             int finalTargetCityId = targetCityId;
             int finalCurrentCityId = currentCityId;
+    
+            int finalMaxUsedTokens = maxUsedTokens;
             DB.update("Order", new Entry() {{
                 put("Distance", finalDistance);
                 put("TargetCityID", finalTargetCityId);
                 put("CurrentCityID", finalCurrentCityId);
                 put("Status", finalCurrentCityId == buyerCityId && finalDistance == 0 ? "arrived" : "sent");
+                put("RecievedTime", finalCurrentCityId == buyerCityId && finalDistance == 0 ? UtilityOperations.getDateFromCalendar(time, -(days - finalMaxUsedTokens)) : null);
             }}, new Where("OrderID", "=", orderID));
         }
         

@@ -13,14 +13,14 @@ public class Logger {
 		functions.add(function);
 		
 		prefix.append("┌");
-		prefix.append("─".repeat(functions.size() - 1));
+		prefix.append(" ─".repeat(functions.size() - 1));
 		prefix.append(" ");
 		
 		System.out.println(prefix + function);
 	}
 	
 	public static void functionEnd(Object result) {
-		String prefix = "└" + "─".repeat(functions.size() - 1) + " ";
+		String prefix = "└" + " ─".repeat(functions.size() - 1) + " ";
 		
 		String function = functions.remove(functions.size() - 1);
 		

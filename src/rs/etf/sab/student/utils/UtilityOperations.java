@@ -1,5 +1,6 @@
 package rs.etf.sab.student.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class UtilityOperations {
@@ -14,6 +15,35 @@ public class UtilityOperations {
 		Logger.functionEnd(result);
 		return result;
 	}
+	
+	public static boolean getDiscountEligability(int orderId, String date) {
+		Logger.functionStart("UtilityOperations getDiscountEligability(orderId: " + orderId + ", date: " + date + ")");
+		
+		boolean result = (int) DB.procedure("spMoreDiscount", String.valueOf(orderId), date) == 1;
+		
+		Logger.functionEnd(result);
+		return result;
+	}
+	
+	public static String getDateFromCalendar(Calendar calendar) {
+		return getDateFromCalendar(calendar, 0);
+	}
+	
+	public static String getDateFromCalendar(Calendar calendar, int days) {
+		Logger.functionStart("UtilityOperations getDateFromCalendar(calendar: " + calendar + ", days: " + days + ")");
+		
+		Date result = calendar.getTime();
+		result.setTime(result.getTime() + (long) days * 24 * 60 * 60 * 1000);
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String resultString = dateFormat.format(result);
+		
+		Logger.functionEnd(resultString);
+		return resultString;
+	}
+	
+	
 	
 	private static class Node {
 		int id;
@@ -60,6 +90,8 @@ public class UtilityOperations {
 	}
 	
 	public static ArrayList<Integer> shortestPath(int startId, int destinationId) {
+		Logger.functionStart("UtilityOperations shortestPath(startId: " + startId + ", destinationId: " + destinationId + ")");
+		
 		Map<Integer, Node> cityMap = buildGraph();
 		
 		Node start = cityMap.get(startId);
@@ -108,11 +140,13 @@ public class UtilityOperations {
 		
 		Collections.reverse(path);
 		
+		Logger.functionEnd(path);
 		return path;
 	}
 	
-	
 	public static int findClosestStoreCity(int destinationId) {
+		Logger.functionStart("UtilityOperations findClosestStoreCity(destinationId: " + destinationId + ")");
+		
 		Map<Integer, Node> cityMap = buildGraph();
 		
 		for (Node city : cityMap.values()) {
@@ -132,6 +166,7 @@ public class UtilityOperations {
 			Node current = queue.poll();
 			
 			if (current.endNode) {
+				Logger.functionEnd(current.id);
 				return current.id;
 			}
 			
@@ -152,6 +187,7 @@ public class UtilityOperations {
 			}
 		}
 		
+		Logger.functionEnd(-1);
 		return -1;
 	}
 }

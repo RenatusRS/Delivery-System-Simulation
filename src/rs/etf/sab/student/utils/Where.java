@@ -28,6 +28,7 @@ public class Where {
 		
 		if (
 				!operator.equals("=") &&
+						!operator.equals("!=") &&
 						!operator.equals("<>") &&
 						!operator.equals(">") &&
 						!operator.equals("<") &&
@@ -36,7 +37,7 @@ public class Where {
 						!operator.equals("IS") &&
 						!operator.equals("IS NOT")
 		) {
-			throw new IllegalArgumentException("Operator must be one of the following: =, <>, >, <, >=, <=, IS, IS NOT.");
+			throw new IllegalArgumentException("Operator must be one of the following: =, !=, <>, >, <, >=, <=, IS, IS NOT.");
 		}
 		
 		this.column = column;

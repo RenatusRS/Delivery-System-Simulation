@@ -72,10 +72,10 @@ public class DB {
 			
 			if (o instanceof String && !((String) o).contains("+")) o = "'" + o + "'";
 			
-			query.append(key).append(" = ").append(o).append(",");
+			query.append(key).append(" = ").append(o).append(", ");
 		}
 		
-		query.deleteCharAt(query.length() - 1);
+		query.delete(query.length() - 2, query.length());
 		
 		if (wheres != null && wheres.length > 0) {
 			query.append(" WHERE ").append(Where.toString(wheres));
@@ -160,6 +160,38 @@ public class DB {
 			ResultSet resultSet = statement.getGeneratedKeys();
 			
 			return resultSet.next() ? resultSet.getInt(1) : -1;
+		}
+	}
+	
+	public static Object procedure(String procedure, String ... parameters) {
+		StringBuilder query = new StringBuilder("{? = CALL " + procedure + "(");
+		
+		query.append("?,".repeat(parameters.length));
+		query.deleteCharAt(query.length() - 1);
+		query.append(")}");
+		
+		System.out.print("PROCEDURE " + query + " [");
+		
+		try (CallableStatement statement = connection.prepareCall(query.toString())) {
+			for (int i = 0; i < parameters.length; i++) {
+				statement.setObject(i + 2, parameters[i]);
+				
+				System.out.print(parameters[i]);
+				if (i < parameters.length - 1) System.out.print(", ");
+				else System.out.print("]");
+			}
+			
+			statement.registerOutParameter(1, Types.FLOAT); // Not a general solution, but works for this project
+			
+			statement.execute();
+			
+			System.out.println(" -> " + statement.getObject(1));
+			
+			return statement.getObject(1);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
 		}
 	}
 	

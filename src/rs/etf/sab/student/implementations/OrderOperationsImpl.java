@@ -3,10 +3,16 @@ package rs.etf.sab.student.implementations;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import jdk.jshell.execution.Util;
+import rs.etf.sab.operations.GeneralOperations;
 import rs.etf.sab.operations.OrderOperations;
 import rs.etf.sab.student.StudentMain;
 import rs.etf.sab.student.utils.*;
+
+import static rs.etf.sab.student.StudentMain.generalOperations;
 
 
 public class OrderOperationsImpl implements OrderOperations {
@@ -57,11 +63,25 @@ public class OrderOperationsImpl implements OrderOperations {
         Result buyer = DB.select("Buyer", new Where("BuyerID", "=", (int) order.get("BuyerID")));
         
         int closestStore = UtilityOperations.findClosestStoreCity((int) buyer.get("CityID"));
+        ArrayList<Integer> pathTarget = UtilityOperations.shortestPath(closestStore, (int) buyer.get("CityID"));
+        
+        Result connectionTarget = DB.select("Connection", new Where[][] {
+            new Where[] {
+                new Where("CityID1", "=", pathTarget.get(0)),
+                new Where("CityID2", "=", pathTarget.get(1))
+            },
+            new Where[] {
+                new Where("CityID1", "=", pathTarget.get(1)),
+                new Where("CityID2", "=", pathTarget.get(0))
+            }
+        });
         
         DB.update("Order", new Entry() {{
             put("Status", "sent");
-            put("SentTime", StudentMain.generalOperations.getCurrentTime());
-            put("CurrentCity", closestStore);
+            put("SentTime", UtilityOperations.getDateFromCalendar(generalOperations.getCurrentTime()));
+            put("CurrentCityID", closestStore);
+            put("TargetCityID", pathTarget.get(1));
+            put("Distance", connectionTarget.get("Distance"));
         }}, new Where("OrderID", "=", orderId));
         
         Result orderArticles = DB.select("OrderArticle", new Where("OrderID", "=", orderId));
@@ -77,6 +97,7 @@ public class OrderOperationsImpl implements OrderOperations {
                     put("ShopCityID", closestStore);
                     put("TargetCityID", closestStore);
                     put("Distance", 0);
+                    put("Cost", (int) article.get("Price") * (int) orderArticle.get("Count") * (100 - (int) store.get("Discount")) / 100.0);
                 }}, new Where("OrderArticleID", "=", (int) orderArticle.get("OrderArticleID")));
                 
                 continue;
@@ -84,90 +105,117 @@ public class OrderOperationsImpl implements OrderOperations {
             
             ArrayList<Integer> path = UtilityOperations.shortestPath(startingStore, closestStore);
             
-            Result connection = DB.select("Connection", new Where[] {
-                new Where("City1ID", "=", path.get(0)),
-                new Where("City2ID", "=", path.get(1))
+            System.out.println(path);
+    
+            Result connection = DB.select("Connection", new Where[][] {
+                    new Where[] {
+                            new Where("CityID1", "=", path.get(0)),
+                            new Where("CityID2", "=", path.get(1))
+                    },
+                    new Where[] {
+                            new Where("CityID1", "=", path.get(1)),
+                            new Where("CityID2", "=", path.get(0))
+                    }
             });
             
             DB.update("OrderArticle", new Entry() {{
                 put("ShopCityID", closestStore);
                 put("TargetCityID", path.get(1));
                 put("Distance", connection.get("Distance"));
+                put("Cost", (int) article.get("Price") * (int) orderArticle.get("Count") * (100 - (int) store.get("Discount")) / 100.0);
             }}, new Where("OrderArticleID", "=", (int) orderArticle.get("OrderArticleID")));
         }
+        
+        DB.insert("Transaction", new Entry() {{
+            put("OrderID", orderId);
+            put("BuyerID", order.get("BuyerID"));
+            put("Amount", getFinalPrice(orderId));
+            put("ExecutionTime", UtilityOperations.getDateFromCalendar(generalOperations.getCurrentTime()));
+        }});
         
         return 1;
     }
     
     @Override
     public BigDecimal getFinalPrice(int orderId) {
-        // TODO: With procedure
-        
-        return null;
+        return BigDecimal.valueOf((double) DB.procedure("spFinalPrice", String.valueOf(orderId), UtilityOperations.getDateFromCalendar(generalOperations.getCurrentTime()))).setScale(3);
     }
     
     @Override
     public BigDecimal getDiscountSum(int orderId) {
-        Result order = DB.select("Order", new Where("OrderID", "=", orderId));
-        
-        Result transactions = DB.select("Transaction", new Where("BuyerID", "=", (int) order.get("BuyerID")));
-        
-        boolean eligibleForDiscount = false;
-        
-        for (Entry transaction : transactions) {
-            long executedTime = ((Calendar) transaction.get("ExecutionTime")).getTimeInMillis();
-            long currentTime = StudentMain.generalOperations.getCurrentTime().getTimeInMillis();
-            
-            int daysBetween = (int) ((currentTime - executedTime) / (1000 * 60 * 60 * 24));
-            
-            if (((BigDecimal) transaction.get("Amount")).compareTo(BigDecimal.valueOf(10000)) >= 0 && daysBetween <= 30) {
-                eligibleForDiscount = true;
-                break;
-            }
-        }
-    
         Result orderArticles = DB.select("OrderArticle", new Where("OrderID", "=", orderId));
     
-        float total = 0;
-        float totalWithDiscount = 0;
+        double total = 0;
+        double totalWithDiscount = 0;
         
         for (Entry orderArticle : orderArticles) {
             Result article = DB.select("Article", new Where("ArticleID", "=", (int) orderArticle.get("ArticleID")));
             Result shop = DB.select("Shop", new Where("ShopID", "=", (int) article.get("ShopID")));
         
-            float price = (float) article.get("Price");
-            float priceWithDiscount = price * (1 - (float) shop.get("Discount")) / 100;
-            
-            float count = (float) orderArticle.get("Count");
+            int price = (int) article.get("Price");
+            double priceWithDiscount = price * (100 - (int) shop.get("Discount")) / 100.0;
+    
+            int count = (int) orderArticle.get("Count");
             
             total += price * count;
             totalWithDiscount += priceWithDiscount * count;
         }
         
+        Result order = DB.select("Order", new Where("OrderID", "=", orderId));
+    
+        Result transactions = DB.select("Transaction", new Where[] {
+                new Where("BuyerID", "=", (int) order.get("BuyerID")),
+                new Where("Amount", ">=", 10000)
+        });
+    
+        boolean eligibleForDiscount = false;
+    
+        for (Entry transaction : transactions) {
+            long executedTime = ((Calendar) transaction.get("ExecutionTime")).getTimeInMillis();
+            long currentTime = generalOperations.getCurrentTime().getTimeInMillis();
+        
+            int daysBetween = (int) ((currentTime - executedTime) / (1000 * 60 * 60 * 24));
+        
+            if (daysBetween <= 30) {
+                eligibleForDiscount = true;
+                break;
+            }
+        }
+        
         if (eligibleForDiscount) totalWithDiscount *= 0.98;
         
-        return BigDecimal.valueOf(total - totalWithDiscount);
+        return BigDecimal.valueOf(total - totalWithDiscount).setScale(3);
     }
     
     @Override
     public String getState(int orderId) {
         Result order = DB.select("Order", new Where("OrderID", "=", orderId));
         
-        return order.isEmpty() ? null : (String) order.get("State");
+        return order.isEmpty() ? null : (String) order.get("Status");
     }
     
     @Override
     public Calendar getSentTime(int orderId) {
         Result order = DB.select("Order", new Where("OrderID", "=", orderId));
         
-        return order.isEmpty() ? null : (Calendar) order.get("SentTime");
+        if (order.isEmpty() || order.get("SentTime") == null) return null;
+    
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime((Date) order.get("SentTime"));
+    
+        return calendar;
     }
     
     @Override
     public Calendar getRecievedTime(int orderId) {
         Result order = DB.select("Order", new Where("OrderID", "=", orderId));
-        
-        return order.isEmpty() ? null : (Calendar) order.get("RecievedTime");
+    
+        if (order.isEmpty() || order.get("RecievedTime") == null) return null;
+    
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime((Date) order.get("RecievedTime"));
+    
+        return calendar;
     }
     
     @Override
@@ -180,6 +228,8 @@ public class OrderOperationsImpl implements OrderOperations {
     @Override
     public int getLocation(int orderId) {
         Result order = DB.select("Order", new Where("OrderID", "=", orderId));
+        
+        if (order.isEmpty() || order.get("Status") == "created") return -1;
         
         return order.isEmpty() ? -1 : (int) order.get("CurrentCityID");
     }

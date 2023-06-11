@@ -2,7 +2,11 @@ package rs.etf.sab.student.implementations;
 
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import rs.etf.sab.operations.TransactionOperations;
 import rs.etf.sab.student.utils.Entry;
@@ -24,7 +28,7 @@ public class TransactionOperationsImpl implements TransactionOperations {
             amount = amount.add((BigDecimal) transaction.get("Amount"));
         }
         
-        return amount;
+        return amount.setScale(3);
     }
     
     @Override
@@ -37,7 +41,7 @@ public class TransactionOperationsImpl implements TransactionOperations {
             amount = amount.add((BigDecimal) transaction.get("Amount"));
         }
         
-        return amount;
+        return amount.setScale(3);
     }
     
     @Override
@@ -71,14 +75,21 @@ public class TransactionOperationsImpl implements TransactionOperations {
     public List<Integer> getTransationsForShop(int shopId) {
         Result transactions = DB.select("Transaction", new Where("ShopID", "=", shopId));
         
-        return (List<Integer>) transactions.getAll("TransactionID");
+        List<Integer> result = (List<Integer>) transactions.getAll("TransactionID");
+        
+        return result.isEmpty() ? null : result;
     }
     
     @Override
     public Calendar getTimeOfExecution(int transactionId) {
         Result transactions = DB.select("Transaction", new Where("TransactionID", "=", transactionId));
         
-        return transactions.isEmpty() ? null : (Calendar) transactions.get("ExecutionTime");
+        if (transactions.isEmpty()) return null;
+    
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime((Date) transactions.get("ExecutionTime"));
+        
+        return calendar;
     }
     
     @Override
@@ -88,7 +99,7 @@ public class TransactionOperationsImpl implements TransactionOperations {
                 new Where("ShopID", "IS", null)
         });
         
-        return (BigDecimal) transaction.get("Amount");
+        return ((BigDecimal) transaction.get("Amount")).setScale(3);
     }
     
     @Override
@@ -98,14 +109,14 @@ public class TransactionOperationsImpl implements TransactionOperations {
             new Where("ShopID", "=", shopId)
         });
         
-        return (BigDecimal) transaction.get("Amount");
+        return ((BigDecimal) transaction.get("Amount")).setScale(3);
     }
     
     @Override
     public BigDecimal getTransactionAmount(int transactionId) {
         Result transaction = DB.select("Transaction", new Where("TransactionID", "=", transactionId));
         
-        return (BigDecimal) transaction.get("Amount");
+        return ((BigDecimal) transaction.get("Amount")).setScale(3);
     }
     
     @Override
@@ -113,13 +124,21 @@ public class TransactionOperationsImpl implements TransactionOperations {
         Result transactions = DB.select("Transaction");
         
         BigDecimal amount = BigDecimal.ZERO;
+    
+        HashMap<Integer, Boolean> recieved = new HashMap<>();
         
         for (Entry transaction : transactions) {
-            BigDecimal change = (BigDecimal) transaction.get("Amount");
-            
-            amount = transactions.get("BuyerID") != null ? amount.add(change) : amount.subtract(change);
+            if (transaction.get("ShopID") != null) recieved.put((int) transaction.get("OrderID"), true);
         }
         
-        return amount;
+        for (Entry transaction : transactions) {
+            if (recieved.get((int) transaction.get("OrderID")) == null) continue;
+            
+            BigDecimal change = (BigDecimal) transaction.get("Amount");
+            
+            amount = transaction.get("BuyerID") != null ? amount.add(change) : amount.subtract(change);
+        }
+        
+        return amount.setScale(3);
     }
 }

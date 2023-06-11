@@ -39,7 +39,7 @@ public class BuyerOperationsImpl implements BuyerOperations {
             put("Credit", "Credit + " + credit);
         }}, new Where("BuyerID", "=", buyerId));
         
-        return getCredit(buyerId);
+        return getCredit(buyerId).setScale(3);
     }
     
     @Override
@@ -60,7 +60,7 @@ public class BuyerOperationsImpl implements BuyerOperations {
     public BigDecimal getCredit(int buyerId) {
         Result buyer = DB.select("Buyer", new Where("BuyerID", "=", buyerId));
         
-        return buyer.isEmpty() ? null : (BigDecimal) buyer.get("Credit");
+        return buyer.isEmpty() ? null : ((BigDecimal) buyer.get("Credit")).setScale(3);
     }
     
 }
