@@ -1,9 +1,8 @@
 package rs.etf.sab.student;
 
 
-import rs.etf.sab.operations.TransactionOperations;
 import rs.etf.sab.student.implementations.TransactionOperationsImpl;
-import rs.etf.sab.student.utils.*;
+import rs.etf.sab.student.utils.Logger;
 
 import java.math.BigDecimal;
 import java.util.Calendar;

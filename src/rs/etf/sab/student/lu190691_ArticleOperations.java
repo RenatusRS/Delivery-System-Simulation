@@ -1,9 +1,6 @@
 package rs.etf.sab.student;
 
-import rs.etf.sab.operations.ArticleOperations;
 import rs.etf.sab.student.implementations.ArticleOperationsImpl;
-import rs.etf.sab.student.utils.DB;
-import rs.etf.sab.student.utils.Entry;
 import rs.etf.sab.student.utils.Logger;
 
 

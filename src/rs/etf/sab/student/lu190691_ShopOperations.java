@@ -1,8 +1,7 @@
 package rs.etf.sab.student;
 
-import rs.etf.sab.operations.ShopOperations;
 import rs.etf.sab.student.implementations.ShopOperationsImpl;
-import rs.etf.sab.student.utils.*;
+import rs.etf.sab.student.utils.Logger;
 
 import java.util.List;
 

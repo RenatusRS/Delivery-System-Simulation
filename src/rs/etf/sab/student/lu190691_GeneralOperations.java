@@ -1,8 +1,6 @@
 package rs.etf.sab.student;
 
-import rs.etf.sab.operations.GeneralOperations;
 import rs.etf.sab.student.implementations.GeneralOperationsImpl;
-import rs.etf.sab.student.utils.DB;
 import rs.etf.sab.student.utils.Logger;
 
 import java.util.Calendar;

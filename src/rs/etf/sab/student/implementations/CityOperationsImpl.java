@@ -1,12 +1,13 @@
 package rs.etf.sab.student.implementations;
 
-import java.util.ArrayList;
-import java.util.List;
 import rs.etf.sab.operations.CityOperations;
+import rs.etf.sab.student.utils.DB;
 import rs.etf.sab.student.utils.Entry;
 import rs.etf.sab.student.utils.Result;
-import rs.etf.sab.student.utils.DB;
 import rs.etf.sab.student.utils.Where;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CityOperationsImpl implements CityOperations {
@@ -22,7 +23,7 @@ public class CityOperationsImpl implements CityOperations {
     public List<Integer> getCities() {
         Result cities = DB.select("City");
         
-        return (List<Integer>) cities.getAll("CityID");
+        return cities.isEmpty() ? null : (List<Integer>) cities.getAll("CityID");
     }
     
     @Override
@@ -40,21 +41,19 @@ public class CityOperationsImpl implements CityOperations {
                 new Where[] { new Where("CityID1", "=", cityId) },
                 new Where[] { new Where("CityID2", "=", cityId) }
         });
-        
-        ArrayList<Integer> cityIds = new ArrayList<>();
     
-        for (Entry row : cities) {
-            cityIds.add((int) row.get("CityID1") == cityId ? (int) row.get("CityID2") : (int) row.get("CityID1"));
-        }
-        
-        return cityIds;
+        return new ArrayList<>() {{
+            for (Entry row : cities) {
+                add((int) row.get("CityID1") == cityId ? (int) row.get("CityID2") : (int) row.get("CityID1"));
+            }
+        }};
     }
     
     @Override
     public List<Integer> getShops(int cityId) {
         Result shops = DB.select("Shop", new Where("CityID", "=", cityId));
         
-        return (List<Integer>) shops.getAll("ShopID");
+        return shops.isEmpty() ? null : (List<Integer>) shops.getAll("ShopID");
     }
     
 }

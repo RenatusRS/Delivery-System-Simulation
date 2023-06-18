@@ -81,7 +81,6 @@ public class DB {
 			query.append(" WHERE ").append(Where.toString(wheres));
 		}
 		
-		
 		try {
 			return set(query.toString());
 		} catch (SQLException e) {

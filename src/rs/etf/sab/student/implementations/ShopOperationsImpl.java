@@ -1,8 +1,9 @@
 package rs.etf.sab.student.implementations;
 
-import java.util.List;
 import rs.etf.sab.operations.ShopOperations;
 import rs.etf.sab.student.utils.*;
+
+import java.util.List;
 
 
 public class ShopOperationsImpl implements ShopOperations {
@@ -36,11 +37,11 @@ public class ShopOperationsImpl implements ShopOperations {
     
     @Override
     public int increaseArticleCount(int articleId, int increment) {
-        boolean success = DB.update("Article", new Entry() {{
+        int status = DB.update("Article", new Entry() {{
             put("Count", "Count + " + increment);
-        }}, new Where("ArticleID", "=", articleId)) != -1;
+        }}, new Where("ArticleID", "=", articleId));
         
-        return success ? getArticleCount(articleId) : -1;
+        return status == -1 ? -1 : getArticleCount(articleId);
     }
     
     @Override
@@ -61,7 +62,7 @@ public class ShopOperationsImpl implements ShopOperations {
     public int getDiscount(int shopId) {
         Result shop = DB.select("Shop", new Where("ShopID", "=", shopId));
         
-        return shop.isEmpty() ? -1 : (int) shop.get("Discount");
+        return (int) shop.get("Discount");
     }
     
 }

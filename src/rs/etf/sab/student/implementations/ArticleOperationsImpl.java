@@ -1,8 +1,8 @@
 package rs.etf.sab.student.implementations;
 
 import rs.etf.sab.operations.ArticleOperations;
-import rs.etf.sab.student.utils.Entry;
 import rs.etf.sab.student.utils.DB;
+import rs.etf.sab.student.utils.Entry;
 
 
 public abstract class ArticleOperationsImpl implements ArticleOperations {

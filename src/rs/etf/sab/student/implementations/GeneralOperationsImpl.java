@@ -1,11 +1,10 @@
 package rs.etf.sab.student.implementations;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-
 import rs.etf.sab.operations.GeneralOperations;
 import rs.etf.sab.student.utils.*;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class GeneralOperationsImpl implements GeneralOperations {
@@ -29,9 +28,7 @@ public class GeneralOperationsImpl implements GeneralOperations {
         for (Entry order : orders) {
             int orderID = (int) order.get("OrderID");
             
-            if (order.get("Status") == "arrived") {
-                continue;
-            }
+            if (order.get("Status") == "arrived") continue;
     
             int maxUsedTokens = 0;
             
@@ -42,9 +39,7 @@ public class GeneralOperationsImpl implements GeneralOperations {
                 int targetCityId = (int) orderArticle.get("TargetCityID");
                 int distance = (int) orderArticle.get("Distance");
                 
-                if (shopCityId == targetCityId && distance == 0) {
-                    continue;
-                }
+                if (shopCityId == targetCityId && distance == 0) continue;
                 
                 System.out.println("OrderArticleID: " + orderArticle.get("OrderArticleID") + ", ShopCityID: " + shopCityId + ", TargetCityID: " + targetCityId + ", Distance: " + distance);
                 
@@ -59,9 +54,7 @@ public class GeneralOperationsImpl implements GeneralOperations {
                     usedTokens += toUse;
                     
                     if (distance == 0) {
-                        if (shopCityId == targetCityId) {
-                            break;
-                        }
+                        if (shopCityId == targetCityId) break;
                         
                         ArrayList<Integer> path = UtilityOperations.shortestPath(targetCityId, shopCityId);
                         
@@ -91,9 +84,7 @@ public class GeneralOperationsImpl implements GeneralOperations {
                 }}, new Where("OrderArticleID", "=", (int) orderArticle.get("OrderArticleID")));
             }
             
-            if (maxUsedTokens == days) {
-                continue;
-            }
+            if (maxUsedTokens == days) continue;
             
             int distance = (int) order.get("Distance");
             int targetCityId = (int) order.get("TargetCityID");

@@ -1,12 +1,13 @@
 package rs.etf.sab.student.implementations;
 
-import java.math.BigDecimal;
-import java.util.List;
 import rs.etf.sab.operations.BuyerOperations;
+import rs.etf.sab.student.utils.DB;
 import rs.etf.sab.student.utils.Entry;
 import rs.etf.sab.student.utils.Result;
-import rs.etf.sab.student.utils.DB;
 import rs.etf.sab.student.utils.Where;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 
 public class BuyerOperationsImpl implements BuyerOperations {
@@ -60,7 +61,7 @@ public class BuyerOperationsImpl implements BuyerOperations {
     public BigDecimal getCredit(int buyerId) {
         Result buyer = DB.select("Buyer", new Where("BuyerID", "=", buyerId));
         
-        return buyer.isEmpty() ? null : ((BigDecimal) buyer.get("Credit")).setScale(3);
+        return ((BigDecimal) buyer.get("Credit")).setScale(3);
     }
     
 }

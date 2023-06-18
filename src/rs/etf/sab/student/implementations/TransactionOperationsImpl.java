@@ -1,18 +1,17 @@
 package rs.etf.sab.student.implementations;
 
 
+import rs.etf.sab.operations.TransactionOperations;
+import rs.etf.sab.student.utils.DB;
+import rs.etf.sab.student.utils.Entry;
+import rs.etf.sab.student.utils.Result;
+import rs.etf.sab.student.utils.Where;
+
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import rs.etf.sab.operations.TransactionOperations;
-import rs.etf.sab.student.utils.Entry;
-import rs.etf.sab.student.utils.DB;
-import rs.etf.sab.student.utils.Result;
-import rs.etf.sab.student.utils.Where;
 
 
 public class TransactionOperationsImpl implements TransactionOperations {
@@ -28,6 +27,8 @@ public class TransactionOperationsImpl implements TransactionOperations {
             amount = amount.add((BigDecimal) transaction.get("Amount"));
         }
         
+        // TODO: sum of all transactions, 0 if there are not transactions, -1 if failure
+        
         return amount.setScale(3);
     }
     
@@ -41,6 +42,8 @@ public class TransactionOperationsImpl implements TransactionOperations {
             amount = amount.add((BigDecimal) transaction.get("Amount"));
         }
         
+        // TODO: sum of all transactions, 0 if there are not transactions, -1 if failure
+        
         return amount.setScale(3);
     }
     
@@ -48,7 +51,7 @@ public class TransactionOperationsImpl implements TransactionOperations {
     public List<Integer> getTransationsForBuyer(int buyerId) {
         Result transactions = DB.select("Transaction", new Where("BuyerID", "=", buyerId));
         
-        return (List<Integer>) transactions.getAll("TransactionID");
+        return transactions.isEmpty() ? null : (List<Integer>) transactions.getAll("TransactionID");
     }
     
     @Override
@@ -88,6 +91,8 @@ public class TransactionOperationsImpl implements TransactionOperations {
     
         Calendar calendar = Calendar.getInstance();
         calendar.setTime((Date) transactions.get("ExecutionTime"));
+        
+        // TODO: time of execution, null if payment is not done or if failure
         
         return calendar;
     }

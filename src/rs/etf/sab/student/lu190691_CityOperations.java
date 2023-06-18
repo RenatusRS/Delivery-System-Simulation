@@ -1,10 +1,8 @@
 package rs.etf.sab.student;
 
-import rs.etf.sab.operations.CityOperations;
 import rs.etf.sab.student.implementations.CityOperationsImpl;
-import rs.etf.sab.student.utils.*;
+import rs.etf.sab.student.utils.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

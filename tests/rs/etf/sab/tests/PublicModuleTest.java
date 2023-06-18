@@ -169,8 +169,10 @@ public class PublicModuleTest {
 			int shopATransactionId = this.transactionOperations.getTransactionForShopAndOrder(order, shopA);
 			Assert.assertNotEquals(-1L, shopATransactionId);
 			Assert.assertEquals(receivedTime, this.transactionOperations.getTimeOfExecution(shopATransactionId));
-		} catch (AssertionError e) {
+			
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 			throw e;
 		}
 	}
