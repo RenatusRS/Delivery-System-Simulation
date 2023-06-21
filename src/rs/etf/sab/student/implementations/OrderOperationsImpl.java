@@ -145,7 +145,7 @@ public class OrderOperationsImpl implements OrderOperations {
     public BigDecimal getFinalPrice(int orderId) {
         // TODO: final price. Sum that buyer have to pay. -1 if failure or if order is not completed
         
-        return BigDecimal.valueOf((double) DB.procedure("spFinalPrice", String.valueOf(orderId), UtilityOperations.getDateFromCalendar(generalOperations.getCurrentTime()))).setScale(3);
+        return BigDecimal.valueOf((double) DB.procedure("SP_FINAL_PRICE", String.valueOf(orderId), UtilityOperations.getDateFromCalendar(generalOperations.getCurrentTime()))).setScale(3);
     }
     
     @Override
