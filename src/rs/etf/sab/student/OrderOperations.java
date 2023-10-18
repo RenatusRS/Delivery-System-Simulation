@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-class lu190691_OrderOperations extends OrderOperationsImpl {
+class OrderOperations extends OrderOperationsImpl {
     
     @Override
     public int addArticle(int orderId, int articleId, int count) {

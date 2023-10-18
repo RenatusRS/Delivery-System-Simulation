@@ -8,7 +8,7 @@ import rs.etf.sab.tests.TestRunner;
 import java.sql.SQLException;
 
 public class StudentMain {
-    public static final GeneralOperations generalOperations = new lu190691_GeneralOperations();
+    public static final GeneralOperations generalOperations = new GeneralOperations();
 
     public static void main(String[] args) {
         
@@ -20,12 +20,12 @@ public class StudentMain {
             return;
         }
         
-        ArticleOperations articleOperations = new lu190691_ArticleOperations(); // Change this for your implementation (points will be negative if interfaces are not implemented).
-        BuyerOperations buyerOperations = new lu190691_BuyerOperations();
-        CityOperations cityOperations = new lu190691_CityOperations();
-        OrderOperations orderOperations = new lu190691_OrderOperations();
-        ShopOperations shopOperations = new lu190691_ShopOperations();
-        TransactionOperations transactionOperations = new lu190691_TransactionOperations();
+        ArticleOperations articleOperations = new ArticleOperations(); // Change this for your implementation (points will be negative if interfaces are not implemented).
+        BuyerOperations buyerOperations = new BuyerOperations();
+        CityOperations cityOperations = new CityOperations();
+        OrderOperations orderOperations = new OrderOperations();
+        ShopOperations shopOperations = new ShopOperations();
+        TransactionOperations transactionOperations = new TransactionOperations();
         
         TestHandler.createInstance(
                 articleOperations,

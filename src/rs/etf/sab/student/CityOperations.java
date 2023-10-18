@@ -6,7 +6,7 @@ import rs.etf.sab.student.utils.Logger;
 import java.util.List;
 
 
-class lu190691_CityOperations extends CityOperationsImpl {
+class CityOperations extends CityOperationsImpl {
     
     @Override
     public int createCity(String name) {

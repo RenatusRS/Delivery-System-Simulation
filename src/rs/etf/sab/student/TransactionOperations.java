@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-class lu190691_TransactionOperations extends TransactionOperationsImpl {
+class TransactionOperations extends TransactionOperationsImpl {
     
     
     @Override

@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 
-class lu190691_BuyerOperations extends BuyerOperationsImpl {
+class BuyerOperations extends BuyerOperationsImpl {
     
     @Override
     public int createBuyer(String name, int cityId) {

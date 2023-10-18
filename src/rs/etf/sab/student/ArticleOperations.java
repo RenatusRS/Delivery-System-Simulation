@@ -4,7 +4,7 @@ import rs.etf.sab.student.implementations.ArticleOperationsImpl;
 import rs.etf.sab.student.utils.Logger;
 
 
-class lu190691_ArticleOperations extends ArticleOperationsImpl {
+class ArticleOperations extends ArticleOperationsImpl {
     
     @Override
     public int createArticle(int shopId, String articleName, int articlePrice) {

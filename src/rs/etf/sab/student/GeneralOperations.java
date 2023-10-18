@@ -6,7 +6,7 @@ import rs.etf.sab.student.utils.Logger;
 import java.util.Calendar;
 
 
-class lu190691_GeneralOperations extends GeneralOperationsImpl {
+class GeneralOperations extends GeneralOperationsImpl {
     @Override
     public void setInitialTime(Calendar time) {
         Logger.functionStart("GeneralOperations setInitialTime(time: " + time + ")");
