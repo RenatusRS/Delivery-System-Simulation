@@ -1,7 +1,7 @@
 # Online Retail Simulation System
 > Project for **Database Software Tools** / **Softverski Alati Baza Podataka** class.
 
-Simulation of an online retail system that serves as an intermediary between customers and shops. It's developed in **Java 1.8** and manages the database through **SQL Server Management Studio 17.0**.
+Simulation of an online retail system that serves as an intermediary between customers and shops. It's developed in **Java 1.8** and uses **SQL Server Management Studio 17.0** for database management, including stored procedures and triggers in **Transact-SQL**.
 
 For more details on class structures and methods, refer to the documentation [here](https://renatusrs.github.io/SAB-Project/).
 
@@ -15,7 +15,7 @@ For more details on class structures and methods, refer to the documentation [he
 
 ## Requirements
 - **Java JDK 1.8**: For all business logic and class implementations.
-- **SQL Server Management Studio 17.0**: For database management and stored procedures.
+- **SQL Server Management Studio 17.0**: For database management and running stored procedures and triggers in Transact-SQL.
 
 ## How-To Run
 1. Restore the database from `database.bak` found in the `sql` folder using **SQL Server Management Studio**.
