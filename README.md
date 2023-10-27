@@ -1,6 +1,7 @@
 # Online Retail Simulation System
+> Project for **Database Software Tools** / **Softverski Alati Baza Podataka** class.
 
-This project simulates an online retail system that serves as an intermediary between customers and shops. It's developed in **Java 1.8** and manages the database through **SQL Server Management Studio 17.0**.
+Simulation of an online retail system that serves as an intermediary between customers and shops. It's developed in **Java 1.8** and manages the database through **SQL Server Management Studio 17.0**.
 
 For more details on class structures and methods, refer to the documentation [here](https://renatusrs.github.io/SAB-Project/).
 
@@ -12,7 +13,7 @@ For more details on class structures and methods, refer to the documentation [he
 - **Dynamic Discounts**: Offers variable discounts based on shop and customer activity.
 - **Optimized Delivery**: Uses a two-step delivery process for efficiency.
 
-## Requirements / Technical Overview
+## Requirements
 - **Java JDK 1.8**: For all business logic and class implementations.
 - **SQL Server Management Studio 17.0**: For database management and stored procedures.
 
