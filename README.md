@@ -1,9 +1,9 @@
-# Retail Simulation System
+# Delivery System Simulation
 > Project for **Database Software Tools** / **Softverski Alati Baza Podataka** class.
 
-Simulation of an online retail system that serves as an intermediary between customers and shops. It's developed in **Java 1.8** and uses **SQL Server Management Studio 17.0** for database management, including stored procedures and triggers in **Transact-SQL**.
+Simulation of an online retail delivery system that serves as an intermediary between customers and shops. It's developed in **Java 1.8** and uses **SQL Server Management Studio 17.0** for database management, including stored procedures and triggers in **Transact-SQL**.
 
-For more details on class structures and methods, refer to the [documentation](https://renatusrs.github.io/Retail-Simulation-System/).
+For more details on class structures and methods, refer to the [documentation](https://renatusrs.github.io/Delivery-System-Simulation/).
 
 ## Features
 - **Multi-Location Support**: Shops can operate in multiple cities.
